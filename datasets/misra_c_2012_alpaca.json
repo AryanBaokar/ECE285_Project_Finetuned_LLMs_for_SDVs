@@ -1,0 +1,647 @@
+[
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 1.1\n#define MAX 100\n#define MAX 200\nint arr[MAX];",
+    "output": "Violation: MISRA C:2012 Rule 1.1 — The code re-defines the macro 'MAX', which is undefined behavior in C. A macro must not be redefined unless it is first undefined using #undef.\n\nFix:\n#define MAX 100\n// ... use MAX ...\n#undef MAX\n#define MAX 200\nint arr[MAX];"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.1\nint foo(void) {\n    return 1;\n    int x = 5; // unreachable\n}",
+    "output": "Violation: MISRA C:2012 Rule 2.1 — The statement 'int x = 5;' is unreachable code because it follows a return statement. Unreachable code is forbidden.\n\nFix: Remove the unreachable statement:\nint foo(void) {\n    return 1;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.2\nint bar(void) {\n    int x = 5;\n    x = 5; // dead assignment\n    return 0;\n}",
+    "output": "Violation: MISRA C:2012 Rule 2.2 — The assignment 'x = 5;' is a dead assignment; the value written is never subsequently read. Dead code is not allowed.\n\nFix: Remove the dead assignment or use the variable:\nint bar(void) {\n    int x = 5;\n    return x;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.3\ntypedef unsigned int uint_t;\ntypedef unsigned int uint_t; // duplicate typedef",
+    "output": "Violation: MISRA C:2012 Rule 2.3 — A project should not contain unused type declarations. Additionally, duplicate typedefs indicate maintenance error.\n\nFix: Declare the typedef only once:\ntypedef unsigned int uint_t;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.4\nstruct Point { int x; int y; }; // never used",
+    "output": "Violation: MISRA C:2012 Rule 2.4 — A project should not contain unused tag declarations. The struct 'Point' is declared but never used anywhere in the code.\n\nFix: Remove the unused struct declaration or use it in the code."
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.5\n#define UNUSED_MACRO 42\nint main(void) { return 0; }",
+    "output": "Violation: MISRA C:2012 Rule 2.5 — A project should not contain unused macro declarations. The macro 'UNUSED_MACRO' is never used.\n\nFix: Remove the macro if it is not needed:\nint main(void) { return 0; }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.6\nvoid foo(void) {\n    int x = 0;\nlabel:\n    x = 1;\n}",
+    "output": "Violation: MISRA C:2012 Rule 2.6 — A function should not contain unused labels. The label 'label:' is defined but never referenced by a goto statement.\n\nFix: Remove the unused label:\nvoid foo(void) {\n    int x = 1;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 2.7\nvoid foo(int a, int unused_param) {\n    int result = a + 1;\n}",
+    "output": "Violation: MISRA C:2012 Rule 2.7 — There should be no unused parameters in a function. The parameter 'unused_param' is never referenced.\n\nFix: Remove the parameter if not needed, or use it:\nvoid foo(int a) {\n    int result = a + 1;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 3.1\n/* This is a comment /* nested */ end */\nint x = 0;",
+    "output": "Violation: MISRA C:2012 Rule 3.1 — The character sequence /* shall not appear within a C comment. Nested comments are not supported in standard C and lead to unexpected behavior.\n\nFix:\n/* This is a comment - end */\nint x = 0;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 4.1\nchar c = '\\x41\\x42'; // multi-char octal/hex escape",
+    "output": "Violation: MISRA C:2012 Rule 4.1 — Octal and hexadecimal escape sequences shall be terminated. Using multiple hex escapes in a single character constant is implementation-defined.\n\nFix: Use a single well-defined escape:\nchar c = '\\x41'; // Character 'A'"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 5.1\nint very_long_variable_name_that_exceeds_limit = 0;\nint very_long_variable_name_that_exceeds_limit_2 = 0;",
+    "output": "Violation: MISRA C:2012 Rule 5.1 — External identifiers shall be distinct in the first 31 characters. Both variable names are identical in their first 31 characters, which may cause linker conflicts.\n\nFix: Use shorter, distinguishable names:\nint var_a = 0;\nint var_b = 0;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 5.2\nvoid foo(void) {\n    int x = 1;\n    {\n        int x = 2; // shadows outer x\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 5.2 — Identifiers declared in the same scope and namespace shall be distinct. The inner 'x' shadows the outer 'x', which can cause confusion and bugs.\n\nFix: Use different names:\nvoid foo(void) {\n    int x = 1;\n    {\n        int y = 2;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 5.3\nint counter = 0;\nvoid foo(void) {\n    int counter = 5; // shadows global\n}",
+    "output": "Violation: MISRA C:2012 Rule 5.3 — An identifier declared in an inner scope shall not hide an identifier declared in an outer scope. The local 'counter' hides the global 'counter'.\n\nFix: Rename the local variable:\nvoid foo(void) {\n    int local_counter = 5;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 5.4\n#define MAX 100\nvoid foo(void) {\n    int MAX = 5;\n}",
+    "output": "Violation: MISRA C:2012 Rule 5.4 — Macro identifiers shall be distinct from any other identifier. The variable 'MAX' has the same name as the macro 'MAX', which is undefined behavior.\n\nFix:\nvoid foo(void) {\n    int max_val = 5;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 5.5\ntypedef int mytype;\nvoid foo(void) {\n    int mytype = 5;\n}",
+    "output": "Violation: MISRA C:2012 Rule 5.5 — Identifiers shall be distinct from macro names. The variable name 'mytype' clashes with the typedef name 'mytype'.\n\nFix:\nvoid foo(void) {\n    int my_value = 5;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 6.1\nstruct Flags {\n    unsigned int flag1 : 3;\n    int flag2 : 1; // signed bit-field\n};",
+    "output": "Violation: MISRA C:2012 Rule 6.1 — Bit-fields shall only be declared with an appropriate type. Signed bit-fields of width 1 can only hold values 0 and -1 (or 0 and 1, implementation-defined). Use unsigned or _Bool.\n\nFix:\nstruct Flags {\n    unsigned int flag1 : 3;\n    unsigned int flag2 : 1;\n};"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 6.2\nstruct Reg {\n    unsigned int used : 7;\n    unsigned int : 0; // unnamed non-zero bit-field\n    unsigned int other : 1;\n};",
+    "output": "Violation: MISRA C:2012 Rule 6.2 — Single-bit named bit-fields shall not be of a signed type, and unnamed bit-fields should be zero-width for alignment only. Verify unnamed bit-field intent.\n\nFix: Use zero-width unnamed bit-field only for alignment purposes, and document clearly:\nstruct Reg {\n    unsigned int used : 7;\n    unsigned int : 1; /* padding */\n    unsigned int other : 1;\n};"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 7.1\nint x = 010; // octal literal",
+    "output": "Violation: MISRA C:2012 Rule 7.1 — Octal constants shall not be used. '010' is an octal literal representing decimal 8, which is commonly mistaken for decimal 10.\n\nFix: Use decimal or hexadecimal:\nint x = 8;   // or 0x08"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 7.2\nunsigned int x = 100; // missing 'u' suffix",
+    "output": "Violation: MISRA C:2012 Rule 7.2 — A 'u' or 'U' suffix shall be applied to all integer constants that are used in an unsigned context.\n\nFix:\nunsigned int x = 100U;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 7.3\nlong x = 100l; // lowercase 'l' suffix",
+    "output": "Violation: MISRA C:2012 Rule 7.3 — The lowercase letter 'l' shall not be used as the suffix for long literals because it can be confused with the digit '1'.\n\nFix:\nlong x = 100L;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 7.4\nchar *str = \"hello\"; // non-const pointer to string literal",
+    "output": "Violation: MISRA C:2012 Rule 7.4 — A string literal shall not be assigned to an object unless the object's type is 'pointer to const-qualified char'. Modifying a string literal is undefined behavior.\n\nFix:\nconst char *str = \"hello\";"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.1\nfoo(int x) { return x; } // implicit int return type",
+    "output": "Violation: MISRA C:2012 Rule 8.1 — Types shall be explicitly specified. The function 'foo' has an implicit return type of 'int', which is not allowed.\n\nFix:\nint foo(int x) { return x; }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.2\nvoid foo(); // empty parameter list, not void",
+    "output": "Violation: MISRA C:2012 Rule 8.2 — Function types shall be in prototype form with named parameters. An empty parameter list '()' does not specify 'void', which means the function can accept any arguments.\n\nFix:\nvoid foo(void);"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.3\nvoid foo(int x);\nvoid foo(int y) { } // different parameter names",
+    "output": "Violation: MISRA C:2012 Rule 8.3 — All declarations of an object or function shall use the same names and type qualifiers. The parameter is named 'x' in the declaration but 'y' in the definition.\n\nFix:\nvoid foo(int x);\nvoid foo(int x) { }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.4\nextern int shared_var;\nint shared_var = 0;",
+    "output": "Violation: MISRA C:2012 Rule 8.4 — A compatible declaration shall be visible when an object or function with external linkage is defined. The extern declaration must appear before the definition in the same or a header file to ensure consistency.\n\nFix: Declare in a shared header, then define once:\n// header.h\nextern int shared_var;\n// source.c\n#include \"header.h\"\nint shared_var = 0;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.5\nint x;\nint x; // redeclaration",
+    "output": "Violation: MISRA C:2012 Rule 8.5 — An external object or function shall be declared once in one and only one file. Redeclaring 'x' in the same file is unnecessary and error-prone.\n\nFix:\nint x; // declare only once"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.6\nextern int g;\nextern int g; // duplicate extern",
+    "output": "Violation: MISRA C:2012 Rule 8.6 — An identifier with external linkage shall have exactly one external definition. Having duplicate extern declarations is redundant and potentially confusing.\n\nFix: Declare once in a header:\nextern int g;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.7\nstatic int helper(void) { return 42; }\nvoid foo(void) { helper(); }",
+    "output": "Violation: MISRA C:2012 Rule 8.7 — Functions and objects should not be defined with external linkage if they are referenced in only one translation unit. If 'helper' is only used in one file, it should remain static (which it is here — this is a correct pattern). However, if a non-static function is only used internally, it should be marked static.\n\nFix: The static keyword is correct here. If it were missing:\nstatic int helper(void) { return 42; }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.8\nvoid foo(void);\nstatic void foo(void) { } // linkage mismatch",
+    "output": "Violation: MISRA C:2012 Rule 8.8 — The static storage-class specifier shall be used in all declarations of objects and functions that have internal linkage. The extern declaration of 'foo' conflicts with its static definition.\n\nFix: Declare consistently:\nstatic void foo(void);\nstatic void foo(void) { }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.9\nint get_val(void) {\n    static int count = 0;\n    return ++count;\n}\nint global_count = 0;",
+    "output": "Violation: MISRA C:2012 Rule 8.9 — An object should be defined at block scope if its identifier only appears in a single function. The variable 'global_count' should be local or static inside the function if only used there.\n\nFix:\nint get_val(void) {\n    static int count = 0;\n    return ++count;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 8.10\nstatic inline int add(int a, int b) {\n    return a + b;\n}",
+    "output": "Violation: MISRA C:2012 Rule 8.10 — An inline function shall be declared with the static storage-class specifier. Actually, this code is compliant. A violation would be:\ninline int add(int a, int b) { return a + b; }\n\nFix:\nstatic inline int add(int a, int b) {\n    return a + b;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 9.1\nint x;\nint y = x + 1; // x used before initialization",
+    "output": "Violation: MISRA C:2012 Rule 9.1 — The value of an object with automatic storage duration shall not be read before it has been set. 'x' is uninitialized when used to compute 'y'.\n\nFix:\nint x = 0;\nint y = x + 1;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 9.2\nint arr[3] = {1, 2}; // partial initializer without brace enclosure",
+    "output": "Violation: MISRA C:2012 Rule 9.2 — The initializer for an aggregate or union shall be enclosed in braces. Partial initializations are allowed in C but should be explicit and complete.\n\nFix:\nint arr[3] = {1, 2, 0}; // explicitly initialize all elements"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 9.3\nenum Color { RED = 0, GREEN, BLUE = 0 }; // duplicate enum value",
+    "output": "Violation: MISRA C:2012 Rule 9.3 — Arrays shall not be partially initialized. Also, enumerations must not have duplicate values unless intentional. BLUE and RED both equal 0, which is confusing.\n\nFix:\nenum Color { RED = 0, GREEN = 1, BLUE = 2 };"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.1\nvoid foo(void) {\n    int x = -1;\n    unsigned int y = (unsigned int)x; // inappropriate cast\n    if (y > 0U) { }\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.1 — Operands shall not be of an inappropriate essential type. Converting a negative signed integer to unsigned creates a very large positive number, which is misleading.\n\nFix: Ensure the value is non-negative before converting, or use signed throughout:\nvoid foo(void) {\n    int x = 1;\n    if (x > 0) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.2\nvoid foo(void) {\n    char c = 'A';\n    int x = c + 1; // character arithmetic\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.2 — Expressions of essentially character type shall not be used inappropriately in addition and subtraction operations. Character arithmetic may be non-portable.\n\nFix: Cast explicitly:\nvoid foo(void) {\n    char c = 'A';\n    int x = (int)c + 1;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.3\nvoid foo(void) {\n    int x = 300;\n    char c = x; // narrowing conversion\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.3 — The value of an expression shall not be assigned to an object with a narrower essential type or of a different essential type category. Assigning int 300 to char may overflow.\n\nFix: Validate or use correct type:\nvoid foo(void) {\n    char c = 'A'; // use char literal directly\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.4\nvoid foo(void) {\n    int a = 5;\n    unsigned int b = 3U;\n    if (a + b > 4) { } // mixed signed/unsigned arithmetic\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.4 — Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category. Mixing signed 'a' and unsigned 'b' in arithmetic causes implicit conversion.\n\nFix:\nvoid foo(void) {\n    int a = 5;\n    int b = 3;\n    if (a + b > 4) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.5\nvoid foo(void) {\n    int x = 1;\n    _Bool b = (_Bool)x; // casting to _Bool\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.5 — The value of an expression should not be cast to an inappropriate essential type. Casting an integer to _Bool may produce unexpected results for values other than 0 and 1.\n\nFix:\nvoid foo(void) {\n    int x = 1;\n    _Bool b = (x != 0);\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.6\nvoid foo(void) {\n    unsigned long x = 100; // missing UL suffix\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.6 — The value of a composite expression shall not be assigned to an object with wider essential type without appropriate cast. The literal 100 is of type int; it should have the UL suffix.\n\nFix:\nvoid foo(void) {\n    unsigned long x = 100UL;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.7\nvoid foo(void) {\n    int x = 5;\n    long y = x + 10L; // implicit widening in expression\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.7 — If a composite expression is used in a context that requires it to have a wider type, the cast shall be applied to the expression. The implicit widening of 'x' in the addition is not explicit.\n\nFix:\nvoid foo(void) {\n    int x = 5;\n    long y = (long)x + 10L;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 10.8\nvoid foo(void) {\n    int x = 5;\n    long y = (long)(x + 10); // cast applied to composite expr\n}",
+    "output": "Violation: MISRA C:2012 Rule 10.8 — The value of a composite expression shall not be cast to a different essential type category or a wider essential type. The cast to long is on the entire composite expression, which may silently truncate intermediate values.\n\nFix: Cast individual operands:\nvoid foo(void) {\n    int x = 5;\n    long y = (long)x + 10L;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.1\nvoid (*fp)(void);\nvoid *vp = (void *)fp; // function pointer to void pointer",
+    "output": "Violation: MISRA C:2012 Rule 11.1 — Conversions shall not be performed between a pointer to a function and any other type. Converting a function pointer to void* is undefined behavior.\n\nFix: Avoid such conversions. If needed, use a union or platform-specific mechanism:\n// Keep function pointers as their correct type\nvoid (*fp)(void) = some_function;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.2\nvoid *vp;\nint *ip = (int *)vp; // void pointer to object pointer",
+    "output": "Violation: MISRA C:2012 Rule 11.2 — Conversions shall not be performed between a pointer to an incomplete type and any other type. Casting void* to int* bypasses type safety.\n\nFix: Use proper typed allocation:\nint *ip = (int *)malloc(sizeof(int)); // Only cast from malloc is acceptable"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.3\nvoid foo(void) {\n    int x = 5;\n    float *fp = (float *)&x; // cast between object pointer types\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.3 — A cast shall not be performed between a pointer to object type and a pointer to a different object type. Accessing int memory as float violates strict aliasing rules.\n\nFix: Use memcpy for type punning:\n#include <string.h>\nvoid foo(void) {\n    int x = 5;\n    float f;\n    memcpy(&f, &x, sizeof(float));\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.4\nvoid foo(void) {\n    int x = 5;\n    int *p = (int *)0x4000; // integer to pointer cast\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.4 — A conversion should not be performed between a pointer type and an integer type. Casting literal addresses is hardware-dependent and error-prone.\n\nFix: Use a properly typed volatile pointer for memory-mapped I/O:\nvolatile int * const reg = (volatile int *)0x4000U;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.5\nvoid process(void *data) {\n    int *p = data; // implicit conversion from void*\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.5 — A conversion should not be performed from pointer to void into pointer to object. Implicit assignment from void* to int* is discouraged.\n\nFix: Use explicit cast with caution:\nvoid process(void *data) {\n    int *p = (int *)data;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.6\nvoid foo(void) {\n    void *p = (void *)5; // integer literal to void pointer\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.6 — A cast shall not be performed between pointer to void and an arithmetic type. Casting integer 5 to void* is undefined behavior.\n\nFix: Avoid this pattern. If a null pointer is needed:\nvoid *p = NULL;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.7\nvoid foo(void) {\n    char c = 'A';\n    int *p = (int *)&c; // char pointer to int pointer\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.7 — A cast shall not be performed between pointer to object and a non-integer arithmetic type. Casting char* to int* violates alignment and strict aliasing rules.\n\nFix: Avoid such casts; use appropriate types:\nvoid foo(void) {\n    int x = (int)'A';\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.8\nvoid foo(void) {\n    const int x = 5;\n    int *p = (int *)&x; // cast away const\n    *p = 10;\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.8 — A cast shall not remove any const or volatile qualification from the type pointed to by a pointer. Removing const and modifying the object is undefined behavior.\n\nFix: Do not cast away const:\nvoid foo(void) {\n    int x = 5;\n    int *p = &x;\n    *p = 10;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 11.9\nvoid foo(void) {\n    int *p = 0; // zero literal instead of NULL\n}",
+    "output": "Violation: MISRA C:2012 Rule 11.9 — The macro NULL shall be the only permitted form of integer null pointer constant. Using 0 instead of NULL is ambiguous.\n\nFix:\n#include <stddef.h>\nvoid foo(void) {\n    int *p = NULL;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 12.1\nvoid foo(void) {\n    int x = 2 + 3 * 4; // precedence ambiguity\n}",
+    "output": "Violation: MISRA C:2012 Rule 12.1 — The precedence of operators within expressions should be made explicit. Without parentheses, readers may misread the precedence of * over +.\n\nFix:\nvoid foo(void) {\n    int x = 2 + (3 * 4);\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 12.2\nvoid foo(void) {\n    int x = 1;\n    int y = x << 33; // shift exceeds type width\n}",
+    "output": "Violation: MISRA C:2012 Rule 12.2 — The right-hand operand of a shift operator shall lie in the range zero to one less than the width in bits of the essential type of the left-hand operand. Shifting by 33 is undefined behavior for 32-bit int.\n\nFix:\nvoid foo(void) {\n    int x = 1;\n    int y = x << 3; // valid shift\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 12.3\nvoid foo(void) {\n    int a = 1, b = 2, c = 3; // comma operator in declaration\n}",
+    "output": "Violation: MISRA C:2012 Rule 12.3 — The comma operator should not be used. Using commas to declare multiple variables in one statement reduces clarity.\n\nFix:\nvoid foo(void) {\n    int a = 1;\n    int b = 2;\n    int c = 3;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 12.4\nvoid foo(void) {\n    unsigned int x = 1U;\n    unsigned int y = x - 2U; // unsigned wrap-around\n}",
+    "output": "Violation: MISRA C:2012 Rule 12.4 — Evaluation of constant expressions should not lead to unsigned integer wrap-around. x=1 - 2 wraps to UINT_MAX.\n\nFix: Check before subtraction:\nvoid foo(void) {\n    unsigned int x = 1U;\n    unsigned int y = (x >= 2U) ? (x - 2U) : 0U;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.1\nvoid foo(void) {\n    int a = 0;\n    int b = 0;\n    int c = (a = 1) + b; // assignment in expression\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.1 — Initializer lists shall not contain persistent side effects. Assignments used as sub-expressions cause side effects that are hard to reason about.\n\nFix:\nvoid foo(void) {\n    int a = 1;\n    int b = 0;\n    int c = a + b;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.2\nint g = 0;\nint get(void) { return g++; }\nvoid foo(void) {\n    int x = get() + get(); // order of evaluation undefined\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.2 — The value of an expression and its persistent side effects shall be the same under all permitted evaluation orders. Calling get() twice in one expression has undefined order of side effects.\n\nFix:\nvoid foo(void) {\n    int a = get();\n    int b = get();\n    int x = a + b;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.3\nvoid foo(void) {\n    int x = 5;\n    int y = x++; // increment with side effect in expression\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.3 — A full expression containing an increment (++) or decrement (--) operator should have no other potential side effects other than that caused by the increment or decrement operator. Combining x++ with assignment risks readability errors.\n\nFix:\nvoid foo(void) {\n    int x = 5;\n    int y = x;\n    x++;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.4\nvoid foo(void) {\n    int x;\n    int y = (x = 5); // assignment as sub-expression\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.4 — The result of an assignment operator should not be used. Using an assignment as a sub-expression obscures intent and reduces readability.\n\nFix:\nvoid foo(void) {\n    int x = 5;\n    int y = x;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.5\nvoid foo(int a, int b) {\n    if ((a > 0) && (b = a)) { } // assignment in logical operand\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.5 — The right-hand operand of a logical && or || operator shall not contain persistent side effects. Assigning b inside the && expression causes a side effect.\n\nFix:\nvoid foo(int a, int b) {\n    b = a;\n    if ((a > 0) && (b != 0)) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 13.6\nvoid foo(void) {\n    int arr[5];\n    int n = sizeof(arr++);\n}",
+    "output": "Violation: MISRA C:2012 Rule 13.6 — The operand of the sizeof operator shall not contain any expression which has potential side effects. 'arr++' inside sizeof is not evaluated but the ++ implies a side effect.\n\nFix:\nvoid foo(void) {\n    int arr[5];\n    int n = sizeof(arr);\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 14.1\nvoid foo(void) {\n    for (float f = 0.0f; f != 1.0f; f += 0.1f) { }\n}",
+    "output": "Violation: MISRA C:2012 Rule 14.1 — A loop counter shall not have essentially floating-point type. Floating-point loop counters are imprecise and may not reach the termination condition exactly.\n\nFix: Use an integer loop counter:\nvoid foo(void) {\n    int i;\n    for (i = 0; i < 10; i++) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 14.2\nvoid foo(void) {\n    int i;\n    for (i = 0; i < 10; i++) {\n        if (i == 5) i = 8; // loop counter modified in body\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 14.2 — A for loop shall be well-formed. Modifying the loop counter 'i' inside the loop body makes the loop behavior unpredictable.\n\nFix: Do not modify the loop counter inside the body:\nvoid foo(void) {\n    int i;\n    for (i = 0; i < 10; i++) {\n        if (i == 5) { break; } // use break instead\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 14.3\nvoid foo(void) {\n    int x = 5;\n    if (x > 10) { // always false\n        x = 0;\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 14.3 — Controlling expressions shall not be invariant. The condition 'x > 10' is always false given 'x = 5', indicating dead code or a logic error.\n\nFix: Correct the logic or remove the dead branch:\nvoid foo(void) {\n    int x = 5;\n    // No need for always-false condition\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 14.4\nvoid foo(void) {\n    int x = 1;\n    if (x) { } // non-boolean in if condition\n}",
+    "output": "Violation: MISRA C:2012 Rule 14.4 — The controlling expression of an if statement and iteration-statement shall have essentially Boolean type. Using an integer as a condition is ambiguous.\n\nFix:\nvoid foo(void) {\n    int x = 1;\n    if (x != 0) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.1\nvoid foo(void) {\n    goto end;\n    int x = 5;\nend:\n    return;\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.1 — The goto statement should not be used. goto makes control flow difficult to analyze and maintain.\n\nFix: Restructure logic without goto:\nvoid foo(void) {\n    return;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.2\nvoid foo(int x) {\nstart:\n    if (x > 0) {\n        goto start; // backward jump\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.2 — The goto statement shall jump to a label declared later in the same function. A backward goto creates implicit loops, which are harder to analyze.\n\nFix: Use a while loop:\nvoid foo(int x) {\n    while (x > 0) {\n        // loop body\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.3\nvoid foo(int x) {\n    if (x > 0) { goto end; }\n    int y = 5;\nend:\n    return;\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.3 — Any label referenced by a goto statement shall be declared in the same function as the goto. If 'end' were in a different function, it would be invalid. Also, jumping over 'int y = 5' initialization is problematic.\n\nFix: Avoid goto and restructure:\nvoid foo(int x) {\n    if (x <= 0) {\n        int y = 5;\n        (void)y;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.4\nvoid foo(void) {\n    int i;\n    for (i = 0; i < 10; i++) {\n        if (i == 5) break;\n        if (i == 3) break; // multiple breaks\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.4 — There should be no more than one break or goto statement used to terminate any iteration statement. Multiple break paths make loops harder to analyze.\n\nFix: Combine conditions:\nvoid foo(void) {\n    int i;\n    for (i = 0; i < 10; i++) {\n        if ((i == 5) || (i == 3)) { break; }\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.5\nvoid foo(int x) {\n    if (x > 0) {\n        return;\n    }\n    // implicit return (no explicit return at end)\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.5 — A function shall have a single point of exit at the end of the function. Multiple return statements and missing terminal return violate this rule.\n\nFix:\nvoid foo(int x) {\n    if (x > 0) {\n        // handle positive case\n    }\n    return; // single exit point\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.6\nvoid foo(int x) {\n    if (x > 0)\n        x = 1;\n        x = 2; // misleading indentation\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.6 — The body of an iteration-statement or a selection-statement shall be a compound statement. Without braces, only 'x = 1' is part of the if; 'x = 2' always executes.\n\nFix:\nvoid foo(int x) {\n    if (x > 0) {\n        x = 1;\n    }\n    x = 2;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 15.7\nvoid foo(int x) {\n    if (x > 0) {\n        x = 1;\n    } else if (x < 0) {\n        x = -1;\n    }\n    // missing final else\n}",
+    "output": "Violation: MISRA C:2012 Rule 15.7 — All if...else if constructs shall be terminated with an else statement. Without a final else, the case where x == 0 is silently ignored.\n\nFix:\nvoid foo(int x) {\n    if (x > 0) {\n        x = 1;\n    } else if (x < 0) {\n        x = -1;\n    } else {\n        /* x == 0: no action needed */\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.1\nvoid foo(int x) {\n    switch (x) {\n        case 1: break;\n        case 1: break; // duplicate case\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.1 — All switch statements shall be well-formed. Duplicate case labels (both case 1) are a logic error and may produce undefined behavior.\n\nFix:\nvoid foo(int x) {\n    switch (x) {\n        case 1: break;\n        case 2: break;\n        default: break;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.2\nvoid foo(int x) {\n    switch (x) {\n        case 1:\n            switch (x) { // nested switch\n                case 1: break;\n            }\n            break;\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.2 — A switch label shall only appear at the outermost level of a switch statement. Nested switches should be avoided for clarity, and inner case labels may confuse fall-through analysis.\n\nFix: Refactor nested switch to a separate function:\nvoid inner(int x) {\n    switch (x) {\n        case 1: break;\n        default: break;\n    }\n}\nvoid foo(int x) {\n    switch (x) {\n        case 1: inner(x); break;\n        default: break;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.3\nvoid foo(int x) {\n    switch (x) {\n        case 1:\n            x = 5;\n            // no break — fall through!\n        case 2:\n            x = 10;\n            break;\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.3 — An unconditional break statement shall terminate every switch-clause. The fall-through from case 1 to case 2 without a break is not allowed unless intentionally documented.\n\nFix:\nvoid foo(int x) {\n    switch (x) {\n        case 1:\n            x = 5;\n            break;\n        case 2:\n            x = 10;\n            break;\n        default:\n            break;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.4\nvoid foo(int x) {\n    switch (x) {\n        case 1: x = 5; break;\n        case 2: x = 10; break;\n        // missing default\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.4 — Every switch statement shall have a default label. Without a default, unhandled values are silently ignored.\n\nFix:\nvoid foo(int x) {\n    switch (x) {\n        case 1: x = 5; break;\n        case 2: x = 10; break;\n        default: break; /* no action for other values */\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.5\nvoid foo(int x) {\n    switch (x) {\n        case 1: break;\n        default: break;\n        case 2: break; // default not last\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.5 — A default label shall appear as either the first or the last switch label of a switch statement. Having 'default' in the middle is confusing and non-standard practice.\n\nFix:\nvoid foo(int x) {\n    switch (x) {\n        case 1: break;\n        case 2: break;\n        default: break;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.6\nvoid foo(int x) {\n    switch (x) {\n        case 1: break;\n        default: break;\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.6 — Every switch statement shall have at least two switch-clauses. A switch with only one case and default provides no benefit over an if statement.\n\nFix: Use an if statement or add more cases:\nvoid foo(int x) {\n    if (x == 1) {\n        /* handle case 1 */\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 16.7\nvoid foo(int x) {\n    switch (x) {\n        case 1:\n            {\n                int y = 0;\n                y = x;\n            }\n            // no break\n        default: break;\n    }\n}",
+    "output": "Violation: MISRA C:2012 Rule 16.7 — A switch-expression shall not have essentially Boolean type. Also, a switch clause containing a block must still end with break. The missing break after the block causes fall-through.\n\nFix:\nvoid foo(int x) {\n    switch (x) {\n        case 1:\n        {\n            int y = x;\n            (void)y;\n            break;\n        }\n        default: break;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.1\n#include <stdarg.h>\nvoid log_msg(const char *fmt, ...) {\n    va_list args;\n    va_start(args, fmt);\n    // va_end never called\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.1 — The features of <stdarg.h> shall not be used. Variadic functions are inherently unsafe due to lack of type checking. Additionally, va_end is never called.\n\nFix: Replace variadic function with explicit parameters or a struct:\nvoid log_msg(const char *fmt, int value) {\n    /* type-safe implementation */\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.2\nvoid foo(int n) {\n    if (n <= 0) return;\n    foo(n - 1); // recursion\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.2 — Functions shall not call themselves, either directly or indirectly. Recursion makes stack depth analysis impossible and is forbidden in safety-critical systems.\n\nFix: Convert to an iterative solution:\nvoid foo(int n) {\n    while (n > 0) {\n        n--;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.3\nextern int unprototyped_func();\nvoid foo(void) {\n    unprototyped_func();\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.3 — A function shall not be declared implicitly. Calling 'unprototyped_func' without a proper prototype declaration is not allowed.\n\nFix: Provide a full prototype:\nextern int unprototyped_func(void);\nvoid foo(void) {\n    unprototyped_func();\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.4\nint add(int a, int b);\nint result = add(1); // too few arguments",
+    "output": "Violation: MISRA C:2012 Rule 17.4 — All exit paths from a function with non-void return type shall have an explicit return statement with an expression. Also, calling a function with wrong number of arguments violates prototype requirements.\n\nFix:\nint result = add(1, 2);"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.5\nvoid foo(int arr[]) {\n    arr[0] = 1; // pointer decay, no size info\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.5 — The function argument corresponding to a parameter declared to have an array type shall have an appropriate number of elements. Passing arrays as pointers loses size information.\n\nFix: Pass size explicitly:\nvoid foo(int *arr, size_t len) {\n    if (len > 0U) {\n        arr[0] = 1;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.6\nvoid foo(void) {\n    int arr[10];\n    int (*p)[10] = &arr;\n    // variable-length array-like usage\n    int n = 5;\n    int vla[n]; // VLA\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.6 — The declaration of an array parameter shall not contain the static keyword between the [ ]. Also, variable-length arrays (VLAs) are not permitted.\n\nFix: Use fixed-size arrays:\nvoid foo(void) {\n    int arr[10];\n    (void)arr;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.7\nvoid foo(void) {\n    int x = printf(\"hello\"); // return value unused\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.7 — The value returned by a function having non-void return type shall be used. The return value of 'printf' is ignored.\n\nFix: Use or explicitly discard the return value:\nvoid foo(void) {\n    (void)printf(\"hello\");\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 17.8\nvoid foo(int x) {\n    x = x + 1; // modifying function parameter\n}",
+    "output": "Violation: MISRA C:2012 Rule 17.8 — A function parameter should not be modified. Modifying 'x' directly is confusing; use a local copy instead.\n\nFix:\nvoid foo(int x) {\n    int local_x = x + 1;\n    (void)local_x;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.1\nvoid foo(void) {\n    int arr[5];\n    arr[5] = 0; // out-of-bounds access\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.1 — A pointer resulting from arithmetic on a pointer operand shall address an element of the same array as that pointer operand. Accessing arr[5] goes one past the last element, which is undefined behavior.\n\nFix:\nvoid foo(void) {\n    int arr[5];\n    arr[4] = 0; // last valid index\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.2\nvoid foo(void) {\n    int arr1[5], arr2[5];\n    int *diff = arr2 - arr1; // subtraction of pointers to different arrays\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.2 — Subtraction between pointers shall only be applied to pointers that address elements of the same array. Subtracting pointers from different arrays is undefined behavior.\n\nFix: Only use pointer arithmetic within the same array:\nvoid foo(void) {\n    int arr[5];\n    int *p = &arr[4];\n    ptrdiff_t diff = p - arr; // valid\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.3\nvoid foo(void) {\n    int a[5], b[5];\n    if (&a[0] < &b[0]) { } // comparing pointers to different objects\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.3 — The relational operators >, >=, <, <= shall not be applied to objects of pointer type except where they point into the same object. Comparing addresses of unrelated arrays is undefined behavior.\n\nFix: Only compare pointers within the same array:\nvoid foo(void) {\n    int arr[5];\n    int *p = &arr[2];\n    if (p < &arr[4]) { }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.4\nvoid foo(void) {\n    int arr[5];\n    int *p = arr + 3;\n    p += 2; // pointer arithmetic may exceed bounds\n    *p = 0;\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.4 — The +, -, += and -= operators should not be applied to an expression of pointer type. Pointer arithmetic is error-prone and should be replaced with array indexing.\n\nFix:\nvoid foo(void) {\n    int arr[5];\n    arr[4] = 0; // use direct indexing\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.5\nvoid foo(void) {\n    int ***ppp; // more than two levels of indirection\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.5 — Declarations should contain no more than two levels of pointer indirection. Triple pointers are extremely difficult to manage safely.\n\nFix: Refactor using structs or reduce indirection:\nvoid foo(void) {\n    int **pp; // maximum two levels\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.6\nvoid foo(void) {\n    int *p;\n    {\n        int x = 5;\n        p = &x; // storing address of local variable\n    }\n    *p = 10; // dangling pointer!\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.6 — The address of an object with automatic storage shall not be copied to another object that persists after the first object has ceased to exist. 'x' is destroyed at the end of the inner block.\n\nFix:\nvoid foo(void) {\n    int x = 5;\n    int *p = &x;\n    *p = 10;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.7\nvoid foo(void) {\n    int arr[] = {1, 2, 3}; // flexible array usage\n    struct S {\n        int len;\n        int data[]; // flexible array member\n    };\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.7 — Flexible array members shall not be declared. Flexible array members make size calculations unclear and complicate memory management.\n\nFix: Use a pointer and explicit length:\nstruct S {\n    int len;\n    int *data;\n};"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 18.8\nvoid foo(int n) {\n    int arr[n]; // variable-length array\n}",
+    "output": "Violation: MISRA C:2012 Rule 18.8 — Variable-length array types shall not be used. VLAs can cause stack overflow and make static analysis impossible.\n\nFix: Use a fixed-size array or dynamic allocation:\n#define MAX_N 100\nvoid foo(int n) {\n    int arr[MAX_N];\n    (void)n;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 19.1\n#include <stdio.h>\nvoid foo(void) {\n    union U {\n        int i;\n        float f;\n    } u;\n    u.i = 5;\n    float x = u.f; // type-punning via union\n}",
+    "output": "Violation: MISRA C:2012 Rule 19.1 — An object shall not be assigned or copied to an overlapping object. Accessing a union member (u.f) after writing a different member (u.i) is implementation-defined.\n\nFix: Use memcpy for type punning:\n#include <string.h>\nvoid foo(void) {\n    int i = 5;\n    float x;\n    memcpy(&x, &i, sizeof(float));\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 19.2\nunion Data {\n    unsigned int u;\n    float f;\n};",
+    "output": "Violation: MISRA C:2012 Rule 19.2 — The union keyword should not be used. Unions allow type punning and overlapping data access that is implementation-defined and error-prone in safety-critical code.\n\nFix: Replace with a struct and explicit conversion functions:\nstruct Data {\n    unsigned int u;\n};\nfloat data_as_float(struct Data d) {\n    float f;\n    memcpy(&f, &d.u, sizeof(float));\n    return f;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.1\n#include <stdio.h>\nint x = 0;\n#include <stdlib.h> // include not at the top",
+    "output": "Violation: MISRA C:2012 Rule 20.1 — #include directives should only be preceded by other preprocessor directives or comments. Including a header after a variable declaration is non-standard and may cause issues.\n\nFix:\n#include <stdio.h>\n#include <stdlib.h>\nint x = 0;"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.2\n#include \"stdio.h\" // system header with quotes",
+    "output": "Violation: MISRA C:2012 Rule 20.2 — The ', \", or \\ characters, and the /* or // character sequences shall not occur in a header file name. Also, system headers should use angle brackets.\n\nFix:\n#include <stdio.h>"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.3\n#if defined FEATURE\n    // use feature\n#else\n    // no feature\n#endif\n\n#if FEATURE // numeric form",
+    "output": "Violation: MISRA C:2012 Rule 20.3 — The #include directive shall be followed by either a <filename> or \"filename\" sequence. Inconsistent use of defined() vs numeric form of macro testing is confusing.\n\nFix: Always use defined() for existence checks:\n#if defined(FEATURE)\n    /* use feature */\n#endif"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.4\n#define malloc my_malloc // redefining standard library name",
+    "output": "Violation: MISRA C:2012 Rule 20.4 — A macro shall not be defined with the same name as a keyword. Redefining 'malloc' conflicts with the standard library.\n\nFix: Use a distinct name:\n#define MY_MALLOC my_malloc"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.5\n#define FEATURE 1\n#undef FEATURE\n#define FEATURE 2",
+    "output": "Violation: MISRA C:2012 Rule 20.5 — #undef should not be used. Undefining and redefining macros makes code harder to understand and may indicate a design flaw.\n\nFix: Use a single definition and configuration mechanism:\n#define FEATURE 2 // Set final value once"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.6\n#define SQUARE(x) x * x // macro without parentheses",
+    "output": "Violation: MISRA C:2012 Rule 20.6 — Tokens that look like a preprocessing directive shall not occur within a macro argument. Also, macro arguments and body should be parenthesized to avoid operator precedence bugs.\n\nFix:\n#define SQUARE(x) ((x) * (x))"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.7\n#define DOUBLE(x) (x + x)\nint result = DOUBLE(3 + 2); // expands incorrectly",
+    "output": "Violation: MISRA C:2012 Rule 20.7 — Expressions resulting from the expansion of macro parameters shall be enclosed in parentheses. DOUBLE(3 + 2) expands to (3 + 2 + 3 + 2), not ((3+2)+(3+2)).\n\nFix:\n#define DOUBLE(x) ((x) + (x))\nint result = DOUBLE(3 + 2);"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.8\n#if X == 1\n#endif",
+    "output": "Violation: MISRA C:2012 Rule 20.8 — The controlling expression of a #if or #elif preprocessing directive shall evaluate to 0 or 1. If X is undefined, the expression evaluates as 0 == 1 rather than generating an error.\n\nFix:\n#if defined(X) && (X == 1)\n#endif"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.9\n#if defined X // missing parentheses around macro name in defined()",
+    "output": "Violation: MISRA C:2012 Rule 20.9 — All identifiers used in the controlling expression of #if or #elif preprocessing directives shall be #define'd before evaluation. Use parentheses with defined().\n\nFix:\n#if defined(X)\n#endif"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.10\n#define CONCAT(a, b) a ## b // token pasting",
+    "output": "Violation: MISRA C:2012 Rule 20.10 — The # and ## preprocessor operators should not be used. Token pasting makes code hard to read and debug.\n\nFix: Avoid ## where possible; use function calls or explicit naming:\n// Prefer explicit names over CONCAT(foo, bar) → foobar"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.11\n#define STRINGIFY(x) #x\nchar *s = STRINGIFY(hello world);",
+    "output": "Violation: MISRA C:2012 Rule 20.11 — A macro parameter immediately following a # operator shall not immediately be followed by a ## operator. Also, the # stringification operator creates strings from tokens in an opaque way.\n\nFix: Use string literals directly:\nconst char *s = \"hello world\";"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.12\n#define LOG(x) printf(#x \" = %d\\n\", x) // macro using # and evaluating x twice",
+    "output": "Violation: MISRA C:2012 Rule 20.12 — A macro parameter used as an operand to the # or ## operators shall not be used as an operand to any other operator in the same expression. 'x' is used both as # operand and as a regular expression argument.\n\nFix: Separate into distinct uses:\n#define LOG_VAR(name, val) printf(name \" = %d\\n\", (val))"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.13\n#if\n#error \"missing condition\"\n#endif",
+    "output": "Violation: MISRA C:2012 Rule 20.13 — A line whose first token is # shall be a valid preprocessing directive. The bare '#if' without a condition is a syntax error.\n\nFix:\n#if defined(SOME_MACRO)\n#error \"SOME_MACRO should not be defined\"\n#endif"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 20.14\n#ifdef FEATURE\n// feature code\n#endif // FEATURE  — mismatched comment",
+    "output": "Violation: MISRA C:2012 Rule 20.14 — All #else, #elif and #endif preprocessing directives shall reside in the same file as the #if, #ifdef or #ifndef directive to which they are related. Mismatched or orphaned directives across files are disallowed.\n\nFix: Ensure all directive pairs are in the same file:\n#ifdef FEATURE\n/* feature code */\n#endif"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.1\n#define true 0 // redefining reserved identifier",
+    "output": "Violation: MISRA C:2012 Rule 21.1 — #define and #undef shall not be used on a reserved identifier or reserved macro name. 'true' is a reserved identifier in C99 (<stdbool.h>).\n\nFix: Never redefine reserved identifiers:\n// Remove the redefinition and use standard <stdbool.h>"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.2\nvoid _internal(void) { } // leading underscore identifier",
+    "output": "Violation: MISRA C:2012 Rule 21.2 — A reserved identifier or reserved macro name shall not be declared. Identifiers beginning with '_' are reserved by the C standard for implementation use.\n\nFix:\nvoid internal_fn(void) { }"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.3\n#include <stdlib.h>\nvoid foo(void) {\n    int *p = (int *)malloc(sizeof(int));\n    free(p);\n    *p = 5; // use after free\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.3 — The memory allocation and deallocation functions of <stdlib.h> shall not be used. Dynamic memory allocation is banned in safety-critical systems. Additionally, this example shows a use-after-free bug.\n\nFix: Use statically allocated memory:\nvoid foo(void) {\n    int x = 5;\n    int *p = &x;\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.4\n#include <setjmp.h>\njmp_buf env;\nvoid foo(void) {\n    setjmp(env);\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.4 — The standard header file <setjmp.h> shall not be used. setjmp/longjmp bypass normal call/return semantics and destroy stack integrity.\n\nFix: Remove use of setjmp and redesign error handling using return codes or error flags."
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.5\n#include <signal.h>\nvoid handler(int sig) { }\nvoid foo(void) {\n    signal(SIGINT, handler);\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.5 — The standard header file <signal.h> shall not be used. Signal handling is asynchronous and unsafe in safety-critical code.\n\nFix: Remove signal-based handling. Use polling or RTOS mechanisms instead."
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.6\n#include <stdio.h>\nvoid foo(void) {\n    printf(\"value\\n\");\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.6 — The Standard Library input/output functions shall not be used in production code. stdio functions are unbounded and not suitable for safety-critical embedded systems.\n\nFix: Use hardware abstraction layer (HAL) serial output functions:\nvoid foo(void) {\n    hal_uart_send(\"value\\n\");\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.7\n#include <stdlib.h>\nvoid foo(void) {\n    int x = atoi(\"123\"); // atoi has no error handling\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.7 — The atof, atoi, atol and atoll functions of <stdlib.h> shall not be used. These functions have no error detection for invalid input.\n\nFix: Use strtol with error checking:\n#include <stdlib.h>\nvoid foo(void) {\n    char *end;\n    long x = strtol(\"123\", &end, 10);\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.8\n#include <stdlib.h>\nvoid foo(void) {\n    abort(); // immediate termination\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.8 — The library functions abort, exit, getenv and system of <stdlib.h> shall not be used. These functions alter program flow in unpredictable ways for embedded systems.\n\nFix: Use a controlled shutdown function:\nvoid foo(void) {\n    system_shutdown(); // project-defined safe shutdown\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.9\n#include <stdlib.h>\nvoid foo(char *arr, int n) {\n    qsort(arr, n, sizeof(char), NULL); // NULL comparator\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.9 — The library functions bsearch and qsort of <stdlib.h> shall not be used. These use function pointers and may have non-deterministic behavior depending on implementation.\n\nFix: Implement a project-specific, deterministic sort algorithm."
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.10\n#include <time.h>\nvoid foo(void) {\n    time_t t = time(NULL);\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.10 — The Standard Library time and date functions shall not be used. Functions like time() are implementation-defined and unsuitable for deterministic embedded systems.\n\nFix: Use an RTOS or hardware RTC API:\nvoid foo(void) {\n    uint32_t t = rtc_get_timestamp();\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.11\n#include <tgmath.h>\nvoid foo(void) {\n    double x = sqrt(4.0);\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.11 — The standard header file <tgmath.h> shall not be used. Type-generic math macros can produce unexpected type coercions.\n\nFix:\n#include <math.h>\nvoid foo(void) {\n    double x = sqrt(4.0);\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 21.12\n#include <fenv.h>\nvoid foo(void) {\n    feclearexcept(FE_ALL_EXCEPT);\n}",
+    "output": "Violation: MISRA C:2012 Rule 21.12 — The exception handling features of <fenv.h> should not be used. Floating-point exception handling is implementation-defined and not suitable for safety-critical systems.\n\nFix: Avoid floating-point exception handling; design algorithms to avoid exceptional FP conditions."
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.1\n#include <stdlib.h>\nvoid foo(void) {\n    int *p = (int *)malloc(sizeof(int));\n    // no free — memory leak\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.1 — All resources obtained dynamically by means of Standard Library functions shall be explicitly released. The memory allocated by malloc is never freed.\n\nFix:\nvoid foo(void) {\n    int *p = (int *)malloc(sizeof(int));\n    if (p != NULL) {\n        /* use p */\n        free(p);\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.2\n#include <stdlib.h>\nvoid foo(void) {\n    int x = 5;\n    free(&x); // freeing non-heap memory\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.2 — A block of memory shall only be freed if it was allocated by means of a Standard Library function. Calling free() on a stack-allocated variable is undefined behavior.\n\nFix: Only call free() on memory obtained from malloc/calloc/realloc:\nvoid foo(void) {\n    int *p = (int *)malloc(sizeof(int));\n    if (p != NULL) { free(p); }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.3\n#include <stdio.h>\nvoid foo(void) {\n    FILE *f1 = fopen(\"a.txt\", \"r\");\n    FILE *f2 = fopen(\"a.txt\", \"w\"); // same file, different modes\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.3 — The same file shall not be open for read and write access at the same time. Opening the same file for both read and write simultaneously can cause data corruption.\n\nFix: Close the file before reopening with a different mode:\nFILE *f = fopen(\"a.txt\", \"r\");\nfclose(f);\nf = fopen(\"a.txt\", \"w\");"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.4\n#include <stdio.h>\nvoid foo(void) {\n    FILE *f = fopen(\"a.txt\", \"r\");\n    fwrite(\"data\", 1, 4, f); // writing to read-only file\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.4 — There shall be no attempt to write to a stream that has been opened as read-only. Writing to a read-only file causes undefined behavior.\n\nFix:\nFILE *f = fopen(\"a.txt\", \"w\");\nfwrite(\"data\", 1U, 4U, f);\nfclose(f);"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.5\n#include <stdio.h>\nvoid foo(void) {\n    FILE *f = fopen(\"a.txt\", \"r\");\n    FILE *g = f; // copying file pointer\n    fclose(f);\n    fclose(g); // double close\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.5 — A pointer to a FILE object shall not be dereferenced. Copying FILE pointers and closing through a copy leads to double-close undefined behavior.\n\nFix: Use a single FILE pointer, never alias it:\nvoid foo(void) {\n    FILE *f = fopen(\"a.txt\", \"r\");\n    if (f != NULL) {\n        fclose(f);\n        f = NULL;\n    }\n}"
+  },
+  {
+    "instruction": "Identify the MISRA C:2012 violation in the following code and explain how to fix it.",
+    "input": "// Rule 22.6\n#include <stdio.h>\nvoid foo(void) {\n    FILE *f = fopen(\"a.txt\", \"r\");\n    fclose(f);\n    fread(NULL, 0, 0, f); // using closed file pointer\n}",
+    "output": "Violation: MISRA C:2012 Rule 22.6 — The value of a pointer to a FILE shall not be used after the associated stream has been closed. Using 'f' after fclose is undefined behavior.\n\nFix:\nvoid foo(void) {\n    FILE *f = fopen(\"a.txt\", \"r\");\n    if (f != NULL) {\n        /* use f */\n        fclose(f);\n        f = NULL;\n    }\n}"
+  }
+]
