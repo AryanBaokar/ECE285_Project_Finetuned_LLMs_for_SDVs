@@ -1,0 +1,9 @@
+Epochs            | 1              
+Learning Rate     | 2e-4            
+LR Scheduler      | cosine            
+Warm-up steps     | 75 
+Batch size        | 2            
+Gradient acc.     | 16           
+LoRA rank         | 16         
+LoRA alpha        | 32          
+Quantization bit  | 4            
